@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -19,18 +19,3 @@ spec:
         image: nginx:{{ .Values.image.tag }}
         ports:
         - containerPort: 80
-        command:
-        - /bin/bash
-        - -c
-        - |
-          apt-get update && apt-get install -y curl gnupg && \
-          curl -sSL https://download.newrelic.com/infrastructure_agent/gpg/newrelic-infra.gpg | apt-key add - && \
-          echo "deb [arch=amd64] https://download.newrelic.com/infrastructure_agent/linux/apt focal main" > /etc/apt/sources.list.d/newrelic-infra.list && \
-          apt-get update && apt-get install -y newrelic-infra && \
-          /usr/bin/newrelic-infra && \
-          nginx -g "daemon off;"
-        env:
-        - name: NEW_RELIC_LICENSE_KEY
-          value: {{ .Values.newrelic_key }}
-        - name: NEW_RELIC_APP_NAME
-          value: "RMS-GIP-NGINX-APP"
